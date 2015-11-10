@@ -1,0 +1,39 @@
+\contentsline {chapter}{\numberline {1}Familiarization of components}{1}
+\contentsline {paragraph}{HARD DISK DRIVES}{5}
+\contentsline {paragraph}{SOLID STATE DRIVES}{5}
+\contentsline {paragraph}{OPTICAL DISK DRIVES}{5}
+\contentsline {paragraph}{FLOPPY DISK DRIVES}{6}
+\contentsline {paragraph}{USB Flash drives}{6}
+\contentsline {paragraph}{TAPE DRIVES}{6}
+\contentsline {paragraph}{KEYBOARDS}{6}
+\contentsline {paragraph}{MOUSE}{6}
+\contentsline {paragraph}{TRACKBALL}{6}
+\contentsline {paragraph}{TOUCHSCREEN}{6}
+\contentsline {paragraph}{JOYSTICK}{7}
+\contentsline {paragraph}{IMAGE SCANNER}{7}
+\contentsline {paragraph}{MICROPHONE}{7}
+\contentsline {paragraph}{PRINTERS}{7}
+\contentsline {paragraph}{COMPUTER MONITORS}{7}
+\contentsline {paragraph}{SPEAKERS}{7}
+\contentsline {paragraph}{RCA}{7}
+\contentsline {paragraph}{VGA}{8}
+\contentsline {paragraph}{DVI}{8}
+\contentsline {paragraph}{HDMI}{8}
+\contentsline {chapter}{\numberline {2}Assembly of computer}{9}
+\contentsline {chapter}{\numberline {3}COM Port base address}{11}
+\contentsline {chapter}{\numberline {4}Serial Port Inter-Computer Communication}{13}
+\contentsline {chapter}{\numberline {5}8051 Serial Communication}{17}
+\contentsline {chapter}{\numberline {6}LED Ring Counter}{20}
+\contentsline {chapter}{\numberline {7}IC Tester}{24}
+\contentsline {chapter}{\numberline {8}Parallel Port Inter-Computer Communication}{26}
+\contentsline {chapter}{\numberline {9}Parallel Port Data Input}{28}
+\contentsline {chapter}{\numberline {10}Multibyte addition}{30}
+\contentsline {chapter}{\numberline {11}Linear Search}{32}
+\contentsline {chapter}{\numberline {12}Factorial}{34}
+\contentsline {chapter}{\numberline {13}Fibonacci Series}{36}
+\contentsline {chapter}{\numberline {14}Minimum and Maximum elements in an array}{38}
+\contentsline {chapter}{\numberline {15}Ascending Order Sort}{41}
+\contentsline {chapter}{\numberline {16}Descending Order Sort}{43}
+\contentsline {chapter}{\numberline {17}Hex to Decimal Conversion}{45}
+\contentsline {chapter}{\numberline {18}Decimal to Hex Conversion}{47}
+\contentsline {chapter}{\numberline {19}BCD To ASCII Conversion}{49}
