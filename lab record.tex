@@ -652,6 +652,7 @@ int main(){
       //--data input(from the user via keyboard) to the peer.
       //--The peer has the same code with transmission occuring initially.
       
+      
       while(1){
             printf("Waiting to receive\n");
             printf("\nRead the character :%c\n",read_serial());
@@ -741,7 +742,8 @@ At the receiver side
 
 \textbf{\underline{STEP 5}:} If RI bit is set, decrement R2 and goto step 2
 
-\large{Receiver:}\\
+\vspace*{10pt}
+\large{Receiver:}
 
 \textbf{\underline{STEP 1}:} Clear RI 
 
@@ -759,7 +761,7 @@ At the receiver side
            MOV DPTR,#4200
            MOV R2,0A
 SEND_LOOP: CLR 98             ; 98 = RI
-           MOV A,@DPTR
+           MOVX A,@DPTR
            MOV SBUF,A
            INC DPTR
      LOOP: JNB 98,LOOP
@@ -925,6 +927,8 @@ The four LEDs will be seen lighting up in the ring counter pattern.
 void main(){
 
      int base = 0x378;
+     
+     //--Granting permission on ports
      if( ioperm(base, 1, 1) == -1){
           printf("\nError granting permission.Terminating...\n");
           return;
@@ -937,6 +941,7 @@ void main(){
           for(; i<16 ; sleep(1), i = i<<1)
                outb(i);
      
+     //--Revoking permission granted earlier
      ioperm(base, 1, 0);
      return;  
 }
@@ -1028,13 +1033,15 @@ For inter computer communication, the bidirectional mode of the parallel port sh
 
 \textbf{\underline{STEP 4}:} Compile and run the program in receiver
 
-\textbf{\underline{STEP 5}:} Observe data. as entered at sender side, at receiver side
+\textbf{\underline{STEP 5}:} Observe data as entered at sender side, at receiver side
 
+\newpage
 \section*{PROGRAM:}
 \textbf{SENDER:}
 \begin{lstlisting}
 #include <stdio.h>
 #include <unistd.h>
+#include <sys/io.h>
 
 int main(){
      int addr;
@@ -1157,30 +1164,32 @@ The program has been executed and the output verified.
 
 \textbf{\underline{STEP 5}:} If there is a carry then place 01 to 4600 else place 00 to 4600
 \section*{PROGRAM:}
+The operands are stored at 4500:4501 and 4502:4503. The result is stored at 4600:4601:4602.
 \begin{lstlisting}
      CLR C
      MOV DPTR,#4501
-     MOVX A,@DPTR
-     MOV R0,A
+     MOVX A,@DPTR        ; GET LOWER BYTE
+     MOV R0,A            ; OF FIRST OPERAND
      MOV DPTR,#4503
-     MOVX A,@DPTR
-     ADD A,R0
+     MOVX A,@DPTR        ; ADD LOWER BYTE
+     ADD A,R0            ; OF SECOND OPERAND
      MOV DPTR,#4602
-     MOVX @DPTR,A
+     MOVX @DPTR,A        ; WRITE TO LOWEST BYTE OF RESULT
      MOV DPTR,#4500
-     MOVX A,@DPTR
-     MOV R0,A
-     MOV DPTR,#4502
-     MOVX A,@DPTR
-     ADDC A,R0
+     MOVX A,@DPTR        ; GET HIGHER BYTE
+     MOV R0,A            ; OF FIRST OPERAND
+     MOV DPTR,#4502      
+     MOVX A,@DPTR        ; ADD HIGHER BYTE
+     ADDC A,R0           ; OF SECOND OPERAND
      MOV DPTR,#4601
-     MOVX @DPTR,A
+     MOVX @DPTR,A        ; WRITE NEXT HIGHER BYTE OF RESULT
      MOV DPTR,#4600
      MOV A,#00
      JNC NO
-     MOV A,#01
- NO: MOVX @DPTR,A
-HLT: SJMP HLT
+     MOV A,#01           ; IN CASE OF CARRY WRITE 1
+                         ; TO HIGHEST BYTE OF RESULT
+ NO: MOVX @DPTR,A 
+     END
 \end{lstlisting}
 \section*{Sample Input}
 (4500): 12 34
@@ -1229,27 +1238,29 @@ To search for a key value in an array of N elements
 \textbf{\underline{STEP 12}:} Point DPTR to result location.
 
 \textbf{\underline{STEP 13}:} Write contents of accumulator to location pointed by DPTR
-
+\newpage
 \section*{PROGRAM:}
 The search key is at memory location 3100H, with the number of elements in the array at 3101H. The array itself is stored at 3150H and the result is placed in 30FFH.\newline
 \begin{lstlisting}
     MOV DPTR,#3100H
-    MOVX A,@DPTR
-    MOV R0,A
+    MOVX A,@DPTR            ; LOAD SEARCH KEY
+    MOV R0,A                ; INTO REGISTER R0
     INC DPTR
-    MOVX A,@DPTR
-    MOV R1,A
-    MOV DPTR,#3150H
-L1: MOVX A,@DPTR
-    XRL A,R0
-    JZ L2
+    MOVX A,@DPTR            ; LOAD COUNT VALUE
+    MOV R1,A                ; INTO REGISTER R1
+    
+    MOV DPTR,#3150H         ; POINT TO START OF ARRAY
+              
+L1: MOVX A,@DPTR            ; READ ELEMENT
+    XRL A,R0                ; CHECK ELEMENT
+    JZ L2                   ; WITH KEY
     INC DPTR
     DJNZ R1,L1
-    MOV A,#00H
+    MOV A,#00H              ; INDICATE FALSE
     JMP L3
-L2: INC A
+L2: INC A                   ; INDICATE TRUE
 L3: MOV DPTR,#30FF
-    MOVX @DPTR,A
+    MOVX @DPTR,A            ; WRITE OUT RESULT
     END
 \end{lstlisting}
 \section*{SAMPLE INPUT:}
@@ -1281,22 +1292,24 @@ To find the factorial of an input number.
 
 \textbf{\underline{STEP 6}:} Point DPTR to result location
 
-\textbf{\underline{STEP 7}:} Wrtie contents of A to memory location pointed to by DPTR
+\textbf{\underline{STEP 7}:} Write contents of A to memory location pointed to by DPTR
 
 \section*{PROGRAM:}
+The input number is stored at memory location 4200H and the factorial of the number is stored at 4300H
 \begin{lstlisting}
      MOV DPTR,#4200H
-     MOVX A,@DPTR
-     MOV B,A
-     MOV A,#01
-L1:  MOV R1,B
-     MOV R2,A
-     MUL AB
-     MOV B,R1
-     DJNZ B,LOOP1
-     MOV DPTR,#4300H
+     MOVX A,@DPTR      ; READ INPUT
+     MOV B,A           ; STORE INPUT IN B
+     
+     MOV A,#01         ; INITIALISE ACCUMULATOR TO HOLD RESULT
+     
+L1:  MOV R1,B          ; BACKUP B    
+     MUL AB            
+     MOV B,R1          ; RESTORE B
+     DJNZ B,L1
+     MOV DPTR,#4300H   ; WRITING OUT RESULT
      MOVX @DPTR,A
-HLT: SJMP HLT
+     END
 \end{lstlisting}
 \section*{SAMPLE INPUT:}
 (4200): 05
@@ -1339,32 +1352,35 @@ To generate the Fibonacci series with the number of elements read as input
 \textbf{\underline{STEP 12}:} Decrement register R2
 
 \textbf{\underline{STEP 13}:} If R2 $\neq$ 0, goto step 6 
-
+\newpage
 \section*{PROGRAM:}
 The count value is stored at location 3100H and the result array is stored from 3101H onward.
 \newline
 \begin{lstlisting}
-     MOV DPTR,#3100H
+     MOV DPTR,#3100H     ; READING COUNT VALUE
      MOVX A,@DPTR
-     SUBB A,#02H
-     MOV R2,A
-     MOV R0,#00H
+     SUBB A,#02H         ; DECREASING COUNT BY 2 SINCE
+     MOV R2,A            ; FIRST TWO NUMBERS ARE HANDLED
+     MOV R0,#00H         ; OUTSIDE THE LOOP
      MOV R1,#01H
      INC DPTR
      MOV A,R0
-     MOVX @DPTR,A
+     MOVX @DPTR,A        ; WRITE OUT 0
      INC DPTR
      MOV A,R1
-     MOVX @DPTR,A
+     MOVX @DPTR,A        ; WRITE OUT 1
      INC DPTR
-L1:  MOV A,R0
-     ADD A,R1
-     MOVX @DPTR,A
+L1:  MOV A,R0            ; CALCULATE NEXT ELEMENT AS
+     ADD A,R1            ; SUM OF PREVIOUS TWO
+     MOVX @DPTR,A        ; WRITE OUT NEW ELEMENT
      INC DPTR
-     MOV R0,R1
-     MOV R1,A
+     MOV R3,A            ;
+     MOV A,R1            ; MOVE CONTENT OF
+     MOV R0,A            ; R1 INTO R0 AND
+     MOV A,R3            ; A INTO R1
+     MOV R1,A            ;
      DJNZ R2,L1
-HLT: SJMP HLT
+     END
 \end{lstlisting}
 
 \section*{SAMPLE INPUT:}
@@ -1789,17 +1805,17 @@ To convert BCD number to an ASCII number.
      MOV DPTR,#4200H
      MOVX A,@DPTR
      MOV R1,A 
-     ANL A,#F0
-     SWAP A 
+     ANL A,#F0         ; MASK OFF LOWER NIBBLE
+     SWAP A            ; SWAP LOWER AND UPPER NIBBLES OF A 
      ADD A,#30
      MOV DPTR,#4300H
      MOVX @DPTR,A 
      MOV A,R1
-     ANL A,#0F
+     ANL A,#0F         ; MASK OFF UPPER NIBBLE
      ADD A,#30
      INC DPTR
      MOVX @DPTR,A
-EL:  SJMP EL
+     END
 \end{lstlisting}
 
 \section*{Sample Input}
