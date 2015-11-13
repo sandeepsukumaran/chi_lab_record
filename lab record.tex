@@ -1,4 +1,4 @@
-\documentclass[a4paper,28pt]{report}
+\documentclass[a4paper,28pt,twoside,openright]{report}
 \usepackage[top=1in, bottom=1.25in, right=1in, left=1.5in]{geometry}
 \usepackage[parfill]{parskip}
 \usepackage{setspace}
@@ -33,7 +33,7 @@
 %
 %
 % % % % % % % % % % % % % % % % %
-\maketitle
+%\maketitle
   \begin{titlepage}
   	\begin{center}
   		\vspace*{30pt}
@@ -75,6 +75,7 @@
 % % % % % % % % % % % % % % % % %
 %
 %
+\cleardoublepage
 \pagenumbering{roman}
 \pagestyle{empty}
 \tableofcontents
@@ -1474,7 +1475,7 @@ L3:  DJNZ R2,L1     ; IF FURTHER ELEMENTS HAVE TO BE PROCESSED
      MOV A,R1
      MOVX @DPTR,A   ; STORING LARGEST VALUE
      
-EL:  SJMP EL        ; END
+     END
 \end{lstlisting}
 
 \section*{SAMPLE INPUT:}
@@ -1550,7 +1551,7 @@ L2:  INC DPTR
 L3:  DJNZ R2,L2      ; INNER LOOP ENDS
      DJNZ R1,L1      ; OUTER LOOP ENDS
      
-EL:  SJMP EL         ; END
+     END
 \end{lstlisting}
 
 \section*{Sample Input}
@@ -1636,7 +1637,7 @@ L2:  INC DPTR
 L3:  DJNZ R2,L2      ; INNER LOOP ENDS
      DJNZ R1,L1      ; OUTER LOOP ENDS
      
-EL:  SJMP EL         ; END
+     END
 \end{lstlisting}
 
 \section*{Sample Input}
